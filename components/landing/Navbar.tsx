@@ -23,6 +23,18 @@ export function Navbar() {
                     <Link href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
                         About
                     </Link>
+                    <SignedIn>
+                        <Link href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Dashboard
+                        </Link>
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="text-muted-foreground hover:text-foreground transition-colors">
+                                Dashboard
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
                 </nav>
 
                 <div className="flex items-center gap-4">
@@ -40,6 +52,12 @@ export function Navbar() {
                         </Link>
                     </SignedOut>
                     <SignedIn>
+                        <Link
+                            href="/dashboard"
+                            className="inline-flex items-center justify-center h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                        >
+                            Dashboard
+                        </Link>
                         <UserButton />
                     </SignedIn>
                 </div>
