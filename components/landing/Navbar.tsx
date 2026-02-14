@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button"; // Assuming shadcn button is available or will use standard if not
 import { Sparkles } from "lucide-react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export function Navbar() {
     return (
@@ -23,18 +23,43 @@ export function Navbar() {
                     <Link href="#about" className="text-muted-foreground hover:text-foreground transition-colors">
                         About
                     </Link>
+                    <SignedIn>
+                        <Link href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
+                            Dashboard
+                        </Link>
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="text-muted-foreground hover:text-foreground transition-colors">
+                                Dashboard
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
                 </nav>
 
                 <div className="flex items-center gap-4">
-                    <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
-                        Log in
-                    </Link>
-                    <Link
-                        href="/signup"
-                        className="inline-flex items-center justify-center h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
-                    >
-                        Sign up
-                    </Link>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                                Log in
+                            </button>
+                        </SignInButton>
+                        <Link
+                            href="/sign-up"
+                            className="inline-flex items-center justify-center h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                        >
+                            Sign up
+                        </Link>
+                    </SignedOut>
+                    <SignedIn>
+                        <Link
+                            href="/dashboard"
+                            className="inline-flex items-center justify-center h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                        >
+                            Dashboard
+                        </Link>
+                        <UserButton />
+                    </SignedIn>
                 </div>
             </div>
         </header>

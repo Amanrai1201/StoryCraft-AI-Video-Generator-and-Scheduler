@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
 export function Hero() {
     return (
@@ -24,13 +25,23 @@ export function Hero() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-in fade-in slide-in-from-bottom-7 duration-700 delay-300">
-                    <Link
-                        href="/dashboard"
-                        className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25"
-                    >
-                        Get Started Free
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                    </Link>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25 cursor-pointer">
+                                Get Started Free
+                                <ArrowRight className="ml-2 w-4 h-4" />
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
+                    <SignedIn>
+                        <Link
+                            href="/dashboard"
+                            className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/25"
+                        >
+                            Get Started Free
+                            <ArrowRight className="ml-2 w-4 h-4" />
+                        </Link>
+                    </SignedIn>
                     <Link
                         href="#demo"
                         className="inline-flex items-center justify-center h-12 px-8 rounded-full bg-background border border-input hover:bg-accent hover:text-accent-foreground transition-colors font-medium"
