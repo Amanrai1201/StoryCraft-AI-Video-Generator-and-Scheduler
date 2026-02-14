@@ -1,8 +1,9 @@
 
 import { currentUser } from "@clerk/nextjs/server";
-import { createClient } from "@/utils/supabase/server";
+import { createClient, createAdminClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { Navbar } from "@/components/landing/Navbar";
+import { Sidebar } from "@/components/dashboard/Sidebar";
+import { Header } from "@/components/dashboard/Header";
 
 export default async function DashboardLayout({
     children,
@@ -16,33 +17,44 @@ export default async function DashboardLayout({
     }
 
     // Sync user to Supabase
-    const supabase = await createClient();
+    const supabase = await createAdminClient();
 
     // Check if user exists
-    const { data: existingUser } = await supabase
+    const { data: existingUser, error: fetchError } = await supabase
         .from("users")
         .select("id")
-        .eq("clerk_id", user.id)
+        .eq("user_id", user.id)
         .single();
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error("Error fetching user from Supabase:", JSON.stringify(fetchError, null, 2));
+        if (fetchError instanceof Error) {
+            console.error("Error message:", fetchError.message);
+        }
+    }
 
     if (!existingUser) {
         // Insert user if not exists
         const { error } = await supabase.from("users").insert({
-            clerk_id: user.id,
+            user_id: user.id,
             email: user.emailAddresses[0].emailAddress,
             name: `${user.firstName || ""} ${user.lastName || ""}`.trim(),
         });
 
         if (error) {
             console.error("Error syncing user to Supabase:", error);
-            // We can decide to throw or just log. For now, we log.
         }
     }
 
     return (
-        <div className="min-h-screen bg-background">
-            <Navbar />
-            <main>{children}</main>
+        <div className="flex h-screen w-full overflow-hidden bg-background">
+            <Sidebar />
+            <div className="flex flex-col flex-1 h-full overflow-hidden">
+                <Header />
+                <main className="flex-1 overflow-y-auto p-6">
+                    {children}
+                </main>
+            </div>
         </div>
     );
 }
